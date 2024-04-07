@@ -1,128 +1,147 @@
-import * as React from "react"
-import { Link } from "gatsby"
-import { StaticImage } from "gatsby-plugin-image"
+import React, { useState } from "react"
+import { Datepicker } from "headless-datetimepicker"
+import classNames from "classnames"
+import { Chevron } from "../components/icons"
 
-import Layout from "../components/layout"
-import Seo from "../components/seo"
-import * as styles from "../components/index.module.css"
+const ukrainianMonths = {
+  January: "Січень",
+  February: "Лютий",
+  March: "Березень",
+  April: "Квітень",
+  May: "Травень",
+  June: "Червень",
+  July: "Липень",
+  August: "Серпень",
+  September: "Вересень",
+  October: "Жовтень",
+  November: "Листопад",
+  December: "Грудень",
+}
 
-const links = [
-  {
-    text: "Tutorial",
-    url: "https://www.gatsbyjs.com/docs/tutorial",
-    description:
-      "A great place to get started if you're new to web development. Designed to guide you through setting up your first Gatsby site.",
-  },
-  {
-    text: "Examples",
-    url: "https://github.com/gatsbyjs/gatsby/tree/master/examples",
-    description:
-      "A collection of websites ranging from very basic to complex/complete that illustrate how to accomplish specific tasks within your Gatsby sites.",
-  },
-  {
-    text: "Plugin Library",
-    url: "https://www.gatsbyjs.com/plugins",
-    description:
-      "Learn how to add functionality and customize your Gatsby site or app with thousands of plugins built by our amazing developer community.",
-  },
-  {
-    text: "Build and Host",
-    url: "https://www.gatsbyjs.com/cloud",
-    description:
-      "Now you’re ready to show the world! Give your Gatsby site superpowers: Build and host on Gatsby Cloud. Get started for free!",
-  },
-]
+const ukrainianDaysOfWeek = {
+  Sunday: "Нд",
+  Monday: "Пн",
+  Tuesday: "Вт",
+  Wednesday: "Ср",
+  Thursday: "Чт",
+  Friday: "Пт",
+  Saturday: "Сб",
+}
 
-const samplePageLinks = [
-  {
-    text: "Page 2",
-    url: "page-2",
-    badge: false,
-    description:
-      "A simple example of linking to another page within a Gatsby site",
-  },
-  { text: "TypeScript", url: "using-typescript" },
-  { text: "Server Side Rendering", url: "using-ssr" },
-  { text: "Deferred Static Generation", url: "using-dsg" },
-]
+const IndexPage = () => {
+  const [value, setValue] = useState(null)
+  // Функція, що повертає перше число поточного місяця
+  const getFirstDayOfMonth = date => {
+    const year = date.getFullYear()
+    const month = date.getMonth()
+    return new Date(year, month, 1)
+  }
 
-const moreLinks = [
-  { text: "Join us on Discord", url: "https://gatsby.dev/discord" },
-  {
-    text: "Documentation",
-    url: "https://gatsbyjs.com/docs/",
-  },
-  {
-    text: "Starters",
-    url: "https://gatsbyjs.com/starters/",
-  },
-  {
-    text: "Showcase",
-    url: "https://gatsbyjs.com/showcase/",
-  },
-  {
-    text: "Contributing",
-    url: "https://www.gatsbyjs.com/contributing/",
-  },
-  { text: "Issues", url: "https://github.com/gatsbyjs/gatsby/issues" },
-]
+  // Визначаємо перше число поточного місяця
+  const firstDayOfMonth = getFirstDayOfMonth(new Date())
 
-const utmParameters = `?utm_source=starter&utm_medium=start-page&utm_campaign=default-starter`
+  // Якщо перше число - середа або пізніше, то знаходимо перше понеділок місяця
+  if (firstDayOfMonth.getDay() > 2) {
+    firstDayOfMonth.setDate(
+      firstDayOfMonth.getDate() + (8 - firstDayOfMonth.getDay())
+    )
+  }
 
-const IndexPage = () => (
-  <Layout>
-    <div className={styles.textCenter}>
-      <StaticImage
-        src="../images/example.png"
-        loading="eager"
-        width={64}
-        quality={95}
-        formats={["auto", "webp", "avif"]}
-        alt=""
-        style={{ marginBottom: `var(--space-3)` }}
-      />
-      <h1>
-        Welcome to <b>Gatsby!</b>
-      </h1>
-      <p className={styles.intro}>
-        <b>Example pages:</b>{" "}
-        {samplePageLinks.map((link, i) => (
-          <React.Fragment key={link.url}>
-            <Link to={link.url}>{link.text}</Link>
-            {i !== samplePageLinks.length - 1 && <> · </>}
-          </React.Fragment>
-        ))}
-        <br />
-        Edit <code>src/pages/index.js</code> to update this page.
-      </p>
+  return (
+    <div>
+      <Datepicker startOfWeek={1} value={value} onChange={setValue}>
+        <Datepicker.Picker
+          defaultType="day"
+          alwaysOpen
+          className=" p-4 dark:bg-gray-800 dark:text-gray-300 w-[482px]"
+        >
+          {({ monthName, year }) => (
+            <>
+              <div className="flex w-full items-center justify-between space-x-6 rtl:space-x-reverse">
+                <div className="flex">
+                  <Datepicker.Button
+                    action="toggleMonth"
+                    className="leading-2 p-2 text-lg rounded-lg font-semibold cursor-auto	"
+                  >
+                    {ukrainianMonths[monthName]}
+                  </Datepicker.Button>
+                  <Datepicker.Button
+                    action="toggleYear"
+                    className="leading-2 p-2 text-lg rounded-lg font-semibold cursor-auto	"
+                  >
+                    {year}
+                  </Datepicker.Button>
+                </div>
+                <div className="flex gap-x-5">
+                  <Datepicker.Button
+                    action="prev"
+                    className="rounded-full p-2 text-sm font-medium rotate-180 rtl:rotate-180"
+                  >
+                    <Chevron className="hover:fill-blue-400" />
+                  </Datepicker.Button>
+
+                  <Datepicker.Button
+                    action="next"
+                    className="rounded-full p-2 text-sm font-medium rtl:rotate-180"
+                  >
+                    <Chevron className="hover:fill-blue-400" />
+                  </Datepicker.Button>
+                </div>
+              </div>
+              <Datepicker.Items
+                className={({ type }) =>
+                  classNames(
+                    "grid w-full auto-rows-max gap-4 overflow-y-auto scroll-smooth pt-6",
+                    type === "day" && "grid-cols-7",
+                    type === "month" && "grid-cols-3",
+                    type === "year" && "max-h-[274px] grid-cols-4"
+                  )
+                }
+              >
+                {({ items }) =>
+                  items.map(item => (
+                    <Datepicker.Item
+                      key={item.key}
+                      item={item}
+                      className={classNames(
+                        "grid items-center justify-center rounded-full  text-sm font-medium select-none",
+                        item.isHeader
+                          ? "cursor-default"
+                          : "hover:bg-blue-600 hover:text-white",
+                        "isInCurrentMonth" in item && item.isInCurrentMonth
+                          ? "text-gray-500"
+                          : "",
+                        item.type === "day" && "h-8 w-8",
+                        item.isSelected && "bg-blue-600 text-white",
+                        item.isToday && "border border-gray-500"
+                      )}
+                      action={
+                        item.type === "day"
+                          ? "close"
+                          : item.type === "month"
+                          ? "showDay"
+                          : "showMonth"
+                      }
+                    >
+                      {item.isHeader
+                        ? ukrainianDaysOfWeek[item.text]
+                        : item.text}
+                    </Datepicker.Item>
+                  ))
+                }
+              </Datepicker.Items>
+              {/* <Datepicker.Button
+                action="today"
+                className="mt-4 w-full bg-blue-700 p-2 text-sm font-medium hover:bg-blue-600 hover:text-white"
+              >
+                Today
+              </Datepicker.Button> */}
+            </>
+          )}
+        </Datepicker.Picker>
+      </Datepicker>
     </div>
-    <ul className={styles.list}>
-      {links.map(link => (
-        <li key={link.url} className={styles.listItem}>
-          <a
-            className={styles.listItemLink}
-            href={`${link.url}${utmParameters}`}
-          >
-            {link.text} ↗
-          </a>
-          <p className={styles.listItemDescription}>{link.description}</p>
-        </li>
-      ))}
-    </ul>
-    {moreLinks.map((link, i) => (
-      <React.Fragment key={link.url}>
-        <a href={`${link.url}${utmParameters}`}>{link.text}</a>
-        {i !== moreLinks.length - 1 && <> · </>}
-      </React.Fragment>
-    ))}
-  </Layout>
-)
-
-/**
- * Head export to define metadata for the page
- *
- * See: https://www.gatsbyjs.com/docs/reference/built-in-components/gatsby-head/
- */
-export const Head = () => <Seo title="Home" />
+  )
+}
 
 export default IndexPage
