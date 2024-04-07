@@ -30,23 +30,6 @@ const ukrainianDaysOfWeek = {
 
 const IndexPage = () => {
   const [value, setValue] = useState(null)
-  // Функція, що повертає перше число поточного місяця
-  const getFirstDayOfMonth = date => {
-    const year = date.getFullYear()
-    const month = date.getMonth()
-    return new Date(year, month, 1)
-  }
-
-  // Визначаємо перше число поточного місяця
-  const firstDayOfMonth = getFirstDayOfMonth(new Date())
-
-  // Якщо перше число - середа або пізніше, то знаходимо перше понеділок місяця
-  if (firstDayOfMonth.getDay() > 2) {
-    firstDayOfMonth.setDate(
-      firstDayOfMonth.getDate() + (8 - firstDayOfMonth.getDay())
-    )
-  }
-
   return (
     <div>
       <Datepicker startOfWeek={1} value={value} onChange={setValue}>
